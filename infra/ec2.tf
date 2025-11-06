@@ -95,10 +95,12 @@ resource "aws_instance" "app_server" {
   }
 }
 
-# Elastic IP
-resource "aws_eip" "elastic_ip" {
-  instance = aws_instance.app_server.id
-  tags = {
-    Name = "${var.project_name}-eip"
-  }
+# Referencia a una IP existente
+data "aws_eip" "existing_ip" {
+  id = "eipalloc-0d922c65d9637409a"  # Allocation ID de la IP elástica existente
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.app_server.id
+  allocation_id = data.aws_eip.existing_ip.id
 }
