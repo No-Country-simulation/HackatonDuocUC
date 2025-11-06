@@ -3,4 +3,4 @@ import uvicorn
 
 if __name__ == "__main__":
     reload_flag = os.getenv("UVICORN_RELOAD", "false").lower() == "true"
-    uvicorn.run("app.main:app", host="0.0.0.0", port=80)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=reload_flag)
