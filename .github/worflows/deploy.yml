@@ -1,0 +1,36 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.AWS_EC2_SSH_KEY }}
+
+      - name: Copy project to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} "mkdir -p ~/app"
+          rsync -avz --exclude='.git' ./ ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app
+
+      - name: Build and run Docker container on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'EOF'
+          cd ~/app
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+          echo "OPENAI_SYSTEM_PROMPT=${{ secrets.OPENAI_SYSTEM_PROMPT }}" >> .env
+          sudo docker stop hackaton-api || true
+          sudo docker rm hackaton-api || true
+          sudo docker build -t hackatonduocuc-api:latest .
+          sudo docker run -d --name hackaton-api -p 8080:8000 --env-file .env hackatonduocuc-api:latest
+          sudo rm .env
+          EOF
