@@ -83,6 +83,43 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ```bash
 # Root
-curl http://127.0.0.1:8000/
+curl http://127.0.0.1:8080/
 
+```
+
+## Construir imagen Docker
+
+```bash
+docker-compose up --build -d
+```
+
+## Endpoints
+
+```bash
+POST /api/predict
+```
+
+```bash
+{
+  "prompt": "string"
+}
+```
+
+### Ejemplo de Request
+
+```bash
+curl -X POST "http://localhost:8080/api/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Analiza el sentimiento de este texto: Estoy muy contento con el resultado del proyecto"}'
+```
+
+### Response
+
+```bash
+{
+  "score": 0.85,
+  "drivers": [
+    "Respuesta generada por OpenAI"
+  ]
+}
 ```

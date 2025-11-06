@@ -5,8 +5,8 @@ from api.routes_coach import router as coach_router
 
 app = FastAPI(
     title="HackatonDuocUC API",
-    description="API mínima con FastAPI + OpenAI",
-    version="1.0.0"
+    description="API RES  con FastAPI + OpenAI",
+    version="1.0.5"
 )
 
 # Configuración CORS
