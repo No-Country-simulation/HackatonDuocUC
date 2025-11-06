@@ -124,3 +124,37 @@ POST /api/predict
   ]
 }
 ```
+
+## Infraestructura AWS con Terraform
+
+Para desplegar la aplicación en AWS usando Terraform, sigue estos pasos:
+
+1. Asegúrate de tener Terraform instalado y configurado con tus credenciales de AWS.
+2. Navega a la carpeta `infra/` del proyecto.
+3. Inicializa Terraform:
+
+```bash
+terraform init
+```
+
+4. Revisa el plan de despliegue:
+
+```bash
+terraform plan
+```
+
+5. Aplica el plan para crear los recursos:
+
+```bash
+terraform apply
+```
+
+## Eliminar infraestructura
+
+Para eliminar los recursos creados en AWS, ejecuta:
+
+```bash
+terraform destroy
+```
+
+Esto eliminará todas las instancias y recursos asociados creados por Terraform.
