@@ -1,0 +1,54 @@
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+from openai import AuthenticationError, APIConnectionError, RateLimitError, BadRequestError
+
+
+# Carga variables desde .env (por defecto busca en el directorio actual)
+load_dotenv()
+
+# Obtén variables (recomendado: usar os.getenv para valores opcionales)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+
+if not OPENAI_API_KEY:
+    raise RuntimeError("Falta OPENAI_API_KEY en las variables de entorno")
+
+# Crea el cliente con tu API key
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+def ask_openai(prompt: str, model="gpt-5", temperature=0.7) -> str:
+    """
+    Envía un prompt a OpenAI y devuelve la respuesta del modelo.
+    """
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "Eres un asistente útil y conciso."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=temperature
+        )
+
+        # Devolver el texto del mensaje generado
+        return response.choices[0].message.content.strip()
+    except AuthenticationError:
+        return (
+            "Error de autenticación con OpenAI.\n"
+            "Verifica que tu API key sea válida y esté configurada correctamente en el archivo .env o el entorno.\n"
+            "Puedes generar una nueva aquí: https://platform.openai.com/account/api-keys.\n"
+            "Puedes visitar la documentación en Github: https://github.com/jarodsmdev/HackatonDuocUC para más detalles."
+        )
+
+    except RateLimitError:
+        return "Límite de peticiones alcanzado. Intenta de nuevo en unos segundos."
+
+    except APIConnectionError:
+        return "No se pudo conectar con los servidores de OpenAI. Revisa tu conexión a Internet."
+
+    except BadRequestError as e:
+        return f"Error en la solicitud: {e}"
+
+    except Exception as e:
+        return f"Error inesperado: {type(e).__name__} - {e}"
