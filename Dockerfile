@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Exponer el puerto del backend
-EXPOSE 8000
+EXPOSE 8080
 
 # Comando de inicio
 CMD ["python", "run.py"]

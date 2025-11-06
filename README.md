@@ -39,13 +39,14 @@ HackatonDuocUC/
 
 - Python 3.10+ recomendado.
 - `OPENAI_API_KEY` si vas a usar los endpoints que llaman a OpenAI.
+- Crear archivo `.env` con las variables de entorno necesarias.
 
 ## Instalación y ejecución (Linux / zsh)
 
 1. Sitúate en la carpeta del proyecto:
 
 ```bash
-cd /home/jarod/Documents/web/tracks/CITT/HACKATON
+cd ./HackatonDuocUC
 ```
 
 2. Crear y activar un entorno virtual (recomendado):
@@ -65,6 +66,7 @@ pip install -r requirements.txt
 
 ```env
 OPENAI_API_KEY=sk-...   # reemplaza con tu clave real
+OPENAI_SYSTEM_PROMPT="Eres un asistente experto en análisis de datos y desarrollo backend. Siempre respondes en español de manera clara y profesional."
 ```
 
 5. Ejecutar la aplicación (desarrollo):
@@ -76,7 +78,7 @@ python run.py
 Esto lanza Uvicorn con el app importado desde `app.main`. Alternativamente puedes ejecutar directamente:
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=reload_flag)
 ```
 
 ## Probar endpoints (ejemplos)
@@ -105,21 +107,20 @@ POST /api/predict
 }
 ```
 
-### Ejemplo de Request
-
-```bash
-curl -X POST "http://localhost:8080/api/predict" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Analiza el sentimiento de este texto: Estoy muy contento con el resultado del proyecto"}'
-```
-
 ### Response
 
 ```bash
 {
   "score": 0.85,
   "drivers": [
-    "Respuesta generada por OpenAI"
+    {
+      "message": "Respuesta generada por OpenAI",
+      "tokens": {
+        "prompt": 62,
+        "completion": 28,
+        "total": 90
+      }
+    }
   ]
 }
 ```

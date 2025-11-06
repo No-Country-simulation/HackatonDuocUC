@@ -9,6 +9,7 @@ load_dotenv()
 
 # Obtén variables (recomendado: usar os.getenv para valores opcionales)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_SYSTEM_PROMPT = os.getenv("OPENAI_SYSTEM_PROMPT")
 
 
 if not OPENAI_API_KEY:
@@ -17,7 +18,7 @@ if not OPENAI_API_KEY:
 # Crea el cliente con tu API key
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-def ask_openai(prompt: str, model="gpt-5", temperature=0.7) -> str:
+def ask_openai(prompt: str, model="gpt-3.5-turbo-0125", temperature=0.7) -> str:
     """
     Envía un prompt a OpenAI y devuelve la respuesta del modelo.
     """
@@ -25,14 +26,26 @@ def ask_openai(prompt: str, model="gpt-5", temperature=0.7) -> str:
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": "Eres un asistente útil y conciso."},
+                {"role": "system", "content": OPENAI_SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
             ],
-            temperature=temperature
+            temperature=temperature,
+            max_completion_tokens=500 # Esto limita la cantidad de texto generado, sin afectar el prompt.
         )
 
-        # Devolver el texto del mensaje generado
-        return response.choices[0].message.content.strip()
+        result = response.choices[0].message.content.strip()
+        usage = response.usage  # contiene detalles de tokens
+        
+        return {
+                "message": result,
+                "tokens": {
+                    "prompt": usage.prompt_tokens,
+                    "completion": usage.completion_tokens,
+                    "total": usage.total_tokens,
+                }
+        }
+    
+    # Manejo de errores específicos
     except AuthenticationError:
         return (
             "Error de autenticación con OpenAI.\n"
