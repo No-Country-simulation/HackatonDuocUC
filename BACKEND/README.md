@@ -52,8 +52,13 @@ cd ./HackatonDuocUC
 2. Crear y activar un entorno virtual (recomendado):
 
 ```bash
+# Activar entorno virtual Linux/Mac
 python3 -m venv venv
 source venv/bin/activate
+
+ó
+# Activar entorno virtual Windows
+venv\\Scripts\\activate
 ```
 
 3. Instalar dependencias:
@@ -78,14 +83,14 @@ python run.py
 Esto lanza Uvicorn con el app importado desde `app.main`. Alternativamente puedes ejecutar directamente:
 
 ```bash
-uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=reload_flag)
+uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=reload_flag)
 ```
 
 ## Probar endpoints (ejemplos)
 
 ```bash
 # Root
-curl http://127.0.0.1:8080/
+curl http://127.0.0.1:8000/
 
 ```
 
