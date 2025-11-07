@@ -54,6 +54,6 @@ jobs:
           sudo docker compose down || true
 
           # Levantar contenedor usando docker compose
-          sudo docker compose up -d --build --env-file .env
+          sudo docker compose up -d --build
           sudo rm .env
           EOF
