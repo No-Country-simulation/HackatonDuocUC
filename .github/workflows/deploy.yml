@@ -44,7 +44,11 @@ jobs:
           sudo apt-get update
 
           # Instalar Docker
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+          # Iniciar el servicio de Docker
+          sudo systemctl start docker
+          sudo systemctl enable docker
 
           # Detener contenedores existentes
           sudo docker compose down || true
